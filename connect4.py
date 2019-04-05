@@ -48,20 +48,12 @@ def create_board():
 
 
 def drop_piece(col, player, board):
-    try:
-        drop_piece_helper(col, player, board)
-        return True
-    except:
-        print("No more room in that column. Try again.")
-        return False
-
-
-def drop_piece_helper(col, player, board):
     for i in range(len(board)):
         if board[-1-i][col] == 0:
             board[-1-i][col] = player
-            return
-    raise Exception
+            return True
+    print("No more room in that column. Try again.")
+    return False
 
 
 def is_winning_move(board):
@@ -89,6 +81,8 @@ def main():
     is_player_one = True
 
     while not game_over:
+        print("-|0||1||2||3||4||5||6|-")
+        print(board)
         player = 1 if is_player_one else 2
         selection = make_selection(player)
         if selection is None:
@@ -97,9 +91,11 @@ def main():
         if not d:
             continue
         if is_winning_move(board):
-            print(f"Player {player} is the winner!")
+            print("-|0||1||2||3||4||5||6|-")
+            print(board)
+            print("-----------")
+            print(f"PLAYER {player} IS THE WINNER!")
             game_over = True
-        print(board)
         is_player_one = not is_player_one
 
 
