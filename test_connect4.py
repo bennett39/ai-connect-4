@@ -67,4 +67,44 @@ def test_drop_piece():
     assert c4.drop_piece(6, 2, test_board) == False
 
 
+def test_is_winning_move():
+    """ Checks for a winner. Returns bool """
+    blank_board = c4.create_board()
+    assert c4.is_winning_move(blank_board) == False
+    test_board = blank_board
+    for i in range(4):
+        test_board[i][i] = 1
+    assert c4.is_winning_move(test_board) == True
+    test_board = blank_board
+    for i in range(4):
+        test_board[i][6-i] = 2
+    assert c4.is_winning_move(test_board) == True
+    test_board = blank_board
+    for i in range(4):
+        test_board[1][2+i] = 2
+    assert c4.is_winning_move(test_board) == True
+    test_board = blank_board
+    for i in range(4):
+        test_board[1+i][4] = 1
+    assert c4.is_winning_move(test_board) == True
+    test_board = blank_board
+    for i in range(0, 6, 2):
+        test_board[3][i] = 1
+        test_board[3][i+1] = 2
+        test_board[4][i] = 2
+        test_board[4][i+1] = 1
+    assert c4.is_winning_move(test_board) == False
+
+
+def test_make_selection(monkeypatch):
+    monkeypatch.setattr('builtins.input', lambda x: "1")
+    assert c4.make_selection(1) == 1
+    monkeypatch.setattr('builtins.input', lambda x: "5")
+    assert c4.make_selection(1) == 5
+    monkeypatch.setattr('builtins.input', lambda x: "abc")
+    assert c4.make_selection(1) is None
+    monkeypatch.setattr('builtins.input', lambda x: "8")
+    assert c4.make_selection(1) is None
+
+
 pytest.main()

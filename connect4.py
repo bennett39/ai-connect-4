@@ -75,14 +75,18 @@ def make_selection(player):
         return None
 
 
+def print_board(board):
+    print("-|0||1||2||3||4||5||6|-")
+    print(board)
+
+
 def main():
     board = create_board()
     game_over = False
     is_player_one = True
 
     while not game_over:
-        print("-|0||1||2||3||4||5||6|-")
-        print(board)
+        print_board(board)
         player = 1 if is_player_one else 2
         selection = make_selection(player)
         if selection is None:
@@ -91,10 +95,8 @@ def main():
         if not d:
             continue
         if is_winning_move(board):
-            print("-|0||1||2||3||4||5||6|-")
-            print(board)
-            print("-----------")
-            print(f"PLAYER {player} IS THE WINNER!")
+            print_board(board)
+            print(f"-----------\nPLAYER {player} IS THE WINNER!")
             game_over = True
         is_player_one = not is_player_one
 
