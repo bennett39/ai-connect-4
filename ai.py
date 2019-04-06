@@ -45,11 +45,11 @@ def ai_select_column(board):
     return weights.index(max(weights))
 
 
-def check_diagonals(board, row, col):
+def score_diagonals(board, row, col):
     return 0
 
 
-def check_horizontals(board, row, col):
+def score_horizontals(board, row, col):
     lo = 0 if col < 3 else col - 3
     hi = 4 if col > 3 else col + 1
     score = CENTER_WEIGHT if col == 3 else 0
@@ -58,7 +58,7 @@ def check_horizontals(board, row, col):
     return score
 
 
-def check_verticals(board, row, col):
+def score_verticals(board, row, col):
     return 0
 
 
@@ -96,9 +96,9 @@ def weigh_columns(board):
 
 
 def weigh_position(board, row, col):
-    return check_horizontals(board, row, col) \
-            + check_verticals(board, row, col) \
-            + check_diagonals(board, row, col)
+    return score_horizontals(board, row, col) \
+            + score_verticals(board, row, col) \
+            + score_diagonals(board, row, col)
 
 
 

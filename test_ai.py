@@ -10,13 +10,13 @@ def test_ai_select_column():
 
 def test_check_horizontals():
     test_board = c4.create_board()
-    assert ai.check_horizontals(test_board, 5, 3) == 4
+    assert ai.score_horizontals(test_board, 5, 3) == 4
     test_board = c4.create_board()
     c4.drop_piece(3, 1, test_board)
     c4.drop_piece(1, 2, test_board)
-    assert ai.check_horizontals(test_board, 5, 2) == 0
+    assert ai.score_horizontals(test_board, 5, 2) == 0
     test_board = c4.create_board()
     c4.drop_piece(3, 1, test_board)
     c4.drop_piece(3, 2, test_board)
     c4.drop_piece(2, 1, test_board)
-    assert ai.check_horizontals(test_board, 4, 2) == 6
+    assert ai.score_horizontals(test_board, 4, 2) == 6
