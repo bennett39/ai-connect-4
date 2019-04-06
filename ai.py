@@ -40,11 +40,6 @@ def main():
         is_human = not is_human
 
 
-def ai_select_column(board):
-    weights = weigh_columns(board)
-    return weights.index(max(weights))
-
-
 def score_diagonals(board, row, col):
     return 0
 
@@ -73,6 +68,11 @@ def score_window(window):
     return window_score
 
 
+def select_column(board):
+    weights = weigh_columns(board)
+    return weights.index(max(weights))
+
+
 def weigh_pieces(num_pieces):
     if num_pieces == 0:
         return 0
@@ -82,7 +82,6 @@ def weigh_pieces(num_pieces):
         return TRIPLE_WEIGHT
     if num_pieces == 3:
         return QUADRUPLE_WEIGHT
-
 
 
 def weigh_columns(board):
