@@ -29,7 +29,7 @@ def main():
         else:
             print("AI turn")
             time.sleep(1)
-            selection = ai_select_column(board)
+            selection = select_column(board)
         d = c4.drop_piece(selection, player, board)
         if not d:
             continue
@@ -45,9 +45,7 @@ def score_diagonals(board, row, col):
 
 
 def score_horizontals(board, row, col):
-    lo = 0 if col < 3 else col - 3
-    hi = 4 if col > 3 else col + 1
-    score = CENTER_WEIGHT if col == 3 else 0
+    lo, hi, score = set_lo(col), set_hi(col), 0
     for i in range(lo, hi):
         score += score_window(board[row][i:i+4])
     return score
@@ -71,6 +69,14 @@ def score_window(window):
 def select_column(board):
     weights = weigh_columns(board)
     return weights.index(max(weights))
+
+
+def set_hi(col):
+    return 4 if col > 3 else col + 1
+
+
+def set_lo(col):
+    return 0 if col < 3 else col - 3
 
 
 def weigh_pieces(num_pieces):
@@ -97,7 +103,8 @@ def weigh_columns(board):
 def weigh_position(board, row, col):
     return score_horizontals(board, row, col) \
             + score_verticals(board, row, col) \
-            + score_diagonals(board, row, col)
+            + score_diagonals(board, row, col) \
+            + CENTER_WEIGHT if col == 3 else 0
 
 
 

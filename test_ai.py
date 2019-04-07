@@ -3,14 +3,14 @@ import connect4 as c4
 import ai
 
 
-def test_ai_select_column():
+def test_select_column():
     board = c4.create_board()
     assert ai.select_column(board) == 3
 
 
 def test_check_horizontals():
     test_board = c4.create_board()
-    assert ai.score_horizontals(test_board, 5, 3) == 4
+    assert ai.score_horizontals(test_board, 5, 3) == 0
     test_board = c4.create_board()
     c4.drop_piece(3, 1, test_board)
     c4.drop_piece(1, 2, test_board)
