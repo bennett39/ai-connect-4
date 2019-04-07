@@ -1,7 +1,7 @@
 import numpy as np
 
 
-HUMAN, AI = 8, 9
+HUMAN, AI = 1, 2
 ROWS, COLS = 6, 7
 
 
