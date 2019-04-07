@@ -40,8 +40,36 @@ def main():
         is_human = not is_human
 
 
+def create_ascending(board, row, col):
+    return [0, 0, 0, 0]
+
+
+def create_descending(board, row, col):
+    return [0, 0, 0, 0]
+
+
 def score_diagonals(board, row, col):
-    return 0
+    score = 0
+    for i in range(4):
+        start_row, start_col = row + i - 3, col + i - 3
+        if 0 <= start_row <= 2 and 0 <= start_col <= 3:
+            window = [
+                board[start_row][start_col],
+                board[start_row + 1][start_col + 1],
+                board[start_row + 2][start_col + 2],
+                board[start_row + 3][start_col + 3]
+            ]
+            score += score_window(window)
+        start_row, start_col = row - i + 3, col + i - 3
+        if 3 <= start_row <= 5 and 0 <= start_col <= 3:
+            window = [
+                board[start_row][start_col],
+                board[start_row - 1][start_col + 1],
+                board[start_row - 2][start_col + 2],
+                board[start_row - 3][start_col + 3]
+            ]
+            score += score_window(window)
+    return score
 
 
 def score_horizontals(board, row, col):
@@ -71,12 +99,12 @@ def select_column(board):
     return weights.index(max(weights))
 
 
-def set_hi(col):
-    return 4 if col > 3 else col + 1
+def set_hi(val):
+    return 4 if val > 3 else val + 1
 
 
-def set_lo(col):
-    return 0 if col < 3 else col - 3
+def set_lo(val):
+    return 0 if val < 3 else val - 3
 
 
 def weigh_pieces(num_pieces):

@@ -8,7 +8,15 @@ def test_select_column():
     assert ai.select_column(board) == 3
 
 
-def test_check_horizontals():
+def test_score_diagonals():
+    test_board = c4.create_board()
+    assert ai.score_diagonals(test_board, 5, 3) == 0
+    c4.drop_piece(4, 1, test_board)
+    c4.drop_piece(3, 2, test_board)
+    assert ai.score_diagonals(test_board, 4, 4) == 2
+
+
+def test_score_horizontals():
     test_board = c4.create_board()
     assert ai.score_horizontals(test_board, 5, 3) == 0
     test_board = c4.create_board()
