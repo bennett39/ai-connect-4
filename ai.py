@@ -14,16 +14,15 @@ OPP_TRIPLE_WEIGHT = -100
 
 
 def main():
-    human, ai = 1, 2
     board = c4.create_board()
     game_over = False
     is_human = True
     while not game_over:
         c4.print_board(board)
-        player = human if is_human else ai
+        player = c4.HUMAN if is_human else c4.AI
         if is_human:
             print("Your turn")
-            selection = c4.make_selection(human)
+            selection = c4.make_selection(c4.HUMAN)
             if selection is None:
                 continue
         else:
@@ -40,34 +39,26 @@ def main():
         is_human = not is_human
 
 
-def create_ascending(board, row, col):
-    return [0, 0, 0, 0]
-
-
-def create_descending(board, row, col):
-    return [0, 0, 0, 0]
-
-
 def score_diagonals(board, row, col):
     score = 0
     for i in range(4):
         start_row, start_col = row + i - 3, col + i - 3
-        if 0 <= start_row <= 2 and 0 <= start_col <= 3:
-            window = [
+        if 0 <= start_row <= c4.ROWS - 4 and 0 <= start_col <= c4.COLS - 4:
+            window = np.array([
                 board[start_row][start_col],
                 board[start_row + 1][start_col + 1],
                 board[start_row + 2][start_col + 2],
                 board[start_row + 3][start_col + 3]
-            ]
+            ])
             score += score_window(window)
-        start_row, start_col = row - i + 3, col + i - 3
-        if 3 <= start_row <= 5 and 0 <= start_col <= 3:
-            window = [
+        start_row = row - i + 3
+        if c4.ROWS - 3 <= start_row <= c4.ROWS - 1 and 0 <= start_col <= c4.COLS- 4:
+            window = np.array([
                 board[start_row][start_col],
                 board[start_row - 1][start_col + 1],
                 board[start_row - 2][start_col + 2],
                 board[start_row - 3][start_col + 3]
-            ]
+            ])
             score += score_window(window)
     return score
 
@@ -85,8 +76,8 @@ def score_verticals(board, row, col):
 
 def score_window(window):
     window_score = 0
-    if 1 not in window:
-        pieces_in_window = np.count_nonzero(window == 2)
+    if c4.HUMAN not in window:
+        pieces_in_window = np.count_nonzero(window == c4.AI)
         window_score += weigh_pieces(pieces_in_window)
     else:
         # TODO - Add defensive incentives
@@ -99,12 +90,12 @@ def select_column(board):
     return weights.index(max(weights))
 
 
-def set_hi(val):
-    return 4 if val > 3 else val + 1
+def set_hi(col):
+    return c4.COLS - 3 if col > 3 else col + 1
 
 
-def set_lo(val):
-    return 0 if val < 3 else val - 3
+def set_lo(col):
+    return 0 if col < 3 else col - 3
 
 
 def weigh_pieces(num_pieces):
@@ -120,8 +111,8 @@ def weigh_pieces(num_pieces):
 
 def weigh_columns(board):
     weights = []
-    for col in range(7):
-        row = 5
+    for col in range(c4.COLS):
+        row = c4.ROWS - 1
         while row >= 0 and board[row][col] != 0:
             row -= 1
         weights.append(weigh_position(board, row, col))
@@ -133,8 +124,6 @@ def weigh_position(board, row, col):
             + score_verticals(board, row, col) \
             + score_diagonals(board, row, col) \
             + CENTER_WEIGHT if col == 3 else 0
-
-
 
 
 if __name__ == "__main__":

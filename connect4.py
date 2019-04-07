@@ -1,6 +1,10 @@
 import numpy as np
 
 
+HUMAN, AI = 8, 9
+ROWS, COLS = 6, 7
+
+
 def build_all_vals(board):
     all_vals = []
     for row in board:
@@ -12,21 +16,23 @@ def build_all_vals(board):
 def check_diagonals(board):
     all_vals = build_all_vals(board)
     # Upward >> /
-    for i in range(21, 39):
+    for i in range(COLS * 3, ROWS * COLS - 3):
         if all_vals[i] > 0:
-            if all_vals[i] == all_vals[i-6] == all_vals[i-12] == all_vals[i-18]:
+            if all_vals[i] == all_vals[i-COLS+1] == all_vals[i-COLS*2+2] \
+                == all_vals[i-COLS*3+3]:
                 return True
     # Downward >> \
-    for i in range(24, 42):
+    for i in range(COLS * 3 + 3, ROWS * COLS):
         if all_vals[i] > 0:
-            if all_vals[i] == all_vals[i-8] == all_vals[i-16] == all_vals[i-24]:
+            if all_vals[i] == all_vals[i-COLS-1] == all_vals[i-COLS*2-2] \
+                == all_vals[i-COLS*3-3]:
                 return True
     return False
 
 
 def check_horizontal(board):
     for row in board:
-        for i in range(len(row) - 4):
+        for i in range(COLS - 4):
             if row[i] > 0:
                 if row[i] == row[i+1] == row[i+2] == row[i+3]:
                     return True
@@ -35,15 +41,16 @@ def check_horizontal(board):
 
 def check_vertical(board):
     all_vals = build_all_vals(board)
-    for i in range(21, 42):
+    for i in range(COLS * 3, COLS * ROWS):
         if all_vals[i] > 0:
-            if all_vals[i] == all_vals[i-7] == all_vals[i-14] == all_vals[i-21]:
+            if all_vals[i] == all_vals[i-COLS] \
+                == all_vals[i-COLS*2] == all_vals[i-COLS*3]:
                 return True
     return False
 
 
 def create_board():
-    board = np.zeros((6, 7))
+    board = np.zeros((ROWS, COLS))
     return board
 
 
@@ -52,7 +59,7 @@ def drop_piece(col, player, board):
         if board[-1-i][col] == 0:
             board[-1-i][col] = player
             return True
-    print("No more room in that column. Try again.")
+    print("No more room in that column. Try again.") # BUG: Creates AI loop
     return False
 
 
@@ -65,7 +72,7 @@ def is_winning_move(board):
 def make_selection(player):
     selection = input(f"Player {player} make selection (0 - 6): ")
     try:
-        if 0 <= int(selection) <= 6:
+        if 0 <= int(selection) <= COLS - 1:
             selection = int(selection)
             return selection
         else:
@@ -87,7 +94,7 @@ def main():
 
     while not game_over:
         print_board(board)
-        player = 1 if is_player_one else 2
+        player = HUMAN if is_player_one else AI
         selection = make_selection(player)
         if selection is None:
             continue
