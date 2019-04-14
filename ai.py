@@ -117,6 +117,7 @@ def weigh_pieces(num_pieces):
     if num_pieces == -3:
         return -QUADRUPLE_WEIGHT + 1
 
+
 def weigh_columns(board, player):
     weights = []
     for col in range(c4.COLS):
