@@ -28,7 +28,7 @@ def main():
         else:
             print("AI turn")
             time.sleep(1)
-            selection = select_column(board)
+            selection = select_column(board, player)
         d = c4.drop_piece(selection, player, board)
         if not d:
             continue
@@ -39,7 +39,7 @@ def main():
         is_human = not is_human
 
 
-def score_diagonals(board, row, col):
+def score_diagonals(board, row, col, player):
     score = 0
     for i in range(4):
         start_row, start_col = row + i - 3, col + i - 3
@@ -50,7 +50,7 @@ def score_diagonals(board, row, col):
                 board[start_row + 2][start_col + 2],
                 board[start_row + 3][start_col + 3]
             ])
-            score += score_window(window)
+            score += score_window(window, player)
         start_row = row - i + 3
         if c4.ROWS - 3 <= start_row <= c4.ROWS - 1 and 0 <= start_col <= c4.COLS- 4:
             window = np.array([
@@ -59,19 +59,19 @@ def score_diagonals(board, row, col):
                 board[start_row - 2][start_col + 2],
                 board[start_row - 3][start_col + 3]
             ])
-            score += score_window(window)
+            score += score_window(window, player)
     return score
 
 
-def score_horizontals(board, row, col):
+def score_horizontals(board, row, col, player):
     score = 0
     for i in range(c4.COLS - 3):
         if i <= col and col - 3 <= i:
-            score += score_window(board[row][i:i+4])
+            score += score_window(board[row][i:i+4], player)
     return score
 
 
-def score_verticals(board, row, col):
+def score_verticals(board, row, col, player):
     score = 0
     for i in range(c4.ROWS - 3):
         if i <= row and row - 3 <= i:
@@ -79,23 +79,24 @@ def score_verticals(board, row, col):
                 [board[i][col], board[i+1][col],
                 board[i+2][col], board[i+3][col]]
             )
-            score += score_window(window)
+            score += score_window(window, player)
     return score
 
 
-def score_window(window):
+def score_window(window, player):
     window_score = 0
-    if c4.HUMAN not in window:
+    opponent = c4.HUMAN if player == c4.AI else c4.AI
+    if opponent not in window:
         ai_pieces_in_window = np.count_nonzero(window == c4.AI)
         window_score += weigh_pieces(ai_pieces_in_window)
-    elif c4.AI not in window:
+    elif player not in window:
         human_pieces_in_window = -np.count_nonzero(window == c4.HUMAN)
         window_score -= weigh_pieces(human_pieces_in_window)
     return window_score
 
 
-def select_column(board):
-    weights = weigh_columns(board)
+def select_column(board, player):
+    weights = weigh_columns(board, player)
     return weights.index(max(weights))
 
 
@@ -116,25 +117,25 @@ def weigh_pieces(num_pieces):
     if num_pieces == -3:
         return -QUADRUPLE_WEIGHT + 1
 
-def weigh_columns(board):
+def weigh_columns(board, player):
     weights = []
     for col in range(c4.COLS):
         if board[0][col] == 0: # Col is not full
             row = c4.ROWS - 1
             while row >= 0 and board[row][col] != 0:
                 row -= 1
-            weights.append(weigh_position(board, row, col))
+            weights.append(weigh_position(board, row, col, player))
         else:
             weights.append(0)
     return weights
 
 
-def weigh_position(board, row, col):
+def weigh_position(board, row, col, player):
     if row < 0 or row >= c4.ROWS or col < 0 or col >= c4.COLS:
         return 0
-    return score_horizontals(board, row, col) \
-            + score_verticals(board, row, col) \
-            + score_diagonals(board, row, col) \
+    return score_horizontals(board, row, col, player) \
+            + score_verticals(board, row, col, player) \
+            + score_diagonals(board, row, col, player) \
             + (CENTER_WEIGHT if col == 3 else 0)
 
 
