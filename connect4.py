@@ -5,6 +5,29 @@ HUMAN, AI = 1, 2
 ROWS, COLS = 6, 7
 
 
+def main():
+    board = create_board()
+    game_over = False
+    is_player_one = True
+    while not game_over:
+        print_board(board)
+        player = HUMAN if is_player_one else AI
+        selection = make_selection(player)
+        if selection is None:
+            continue
+        d = drop_piece(selection, player, board)
+        if not d:
+            continue
+        if is_winning_move(board):
+            print_board(board)
+            print(f"-----------\nPLAYER {player} IS THE WINNER!")
+            game_over = True
+        if is_full_board():
+            print("No more moves. Draw.")
+            game_over = True
+        is_player_one = not is_player_one
+
+
 def build_all_vals(board):
     all_vals = []
     for row in board:
@@ -59,8 +82,16 @@ def drop_piece(col, player, board):
         if board[-1-i][col] == 0:
             board[-1-i][col] = player
             return True
-    print("No more room in that column. Try again.") # BUG: Creates AI loop
+    print("No more room in that column. Try again.")
     return False
+
+
+def is_full_board(board):
+    for i in range(ROWS):
+        for j in range(COLS):
+            if board[i][j] == 0:
+                return False
+    return True
 
 
 def is_winning_move(board):
@@ -87,25 +118,6 @@ def print_board(board):
     print(board)
 
 
-def main():
-    board = create_board()
-    game_over = False
-    is_player_one = True
-
-    while not game_over:
-        print_board(board)
-        player = HUMAN if is_player_one else AI
-        selection = make_selection(player)
-        if selection is None:
-            continue
-        d = drop_piece(selection, player, board)
-        if not d:
-            continue
-        if is_winning_move(board):
-            print_board(board)
-            print(f"-----------\nPLAYER {player} IS THE WINNER!")
-            game_over = True
-        is_player_one = not is_player_one
 
 
 if __name__ == "__main__":
