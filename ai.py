@@ -86,11 +86,11 @@ def score_verticals(board, row, col):
 def score_window(window):
     window_score = 0
     if c4.HUMAN not in window:
-        pieces_in_window = np.count_nonzero(window == c4.AI)
-        window_score += weigh_pieces(pieces_in_window)
-    else:
-        # TODO - Add defensive incentives
-        pass
+        ai_pieces_in_window = np.count_nonzero(window == c4.AI)
+        window_score += weigh_pieces(ai_pieces_in_window)
+    elif c4.AI not in window:
+        human_pieces_in_window = -np.count_nonzero(window == c4.HUMAN)
+        window_score -= weigh_pieces(human_pieces_in_window)
     return window_score
 
 
@@ -108,7 +108,13 @@ def weigh_pieces(num_pieces):
         return TRIPLE_WEIGHT
     if num_pieces == 3:
         return QUADRUPLE_WEIGHT
-
+    # Opponent weights:
+    if num_pieces == -1:
+        return -DOUBLE_WEIGHT + 1
+    if num_pieces == -2:
+        return -TRIPLE_WEIGHT + 1
+    if num_pieces == -3:
+        return -QUADRUPLE_WEIGHT + 1
 
 def weigh_columns(board):
     weights = []
