@@ -32,7 +32,7 @@ def check_diagonals(board):
 
 def check_horizontal(board):
     for row in board:
-        for i in range(COLS - 4):
+        for i in range(COLS - 3):
             if row[i] > 0:
                 if row[i] == row[i+1] == row[i+2] == row[i+3]:
                     return True

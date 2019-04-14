@@ -80,7 +80,6 @@ def score_verticals(board, row, col):
                 board[i+2][col], board[i+3][col]]
             )
             score += score_window(window)
-            print(window)
     return score
 
 
@@ -119,6 +118,8 @@ def weigh_columns(board):
             while row >= 0 and board[row][col] != 0:
                 row -= 1
             weights.append(weigh_position(board, row, col))
+        else:
+            weights.append(0)
     return weights
 
 

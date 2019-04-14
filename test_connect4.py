@@ -38,6 +38,9 @@ def test_check_horizontal():
     assert c4.check_horizontal(test_board) == True
     test_board[3][2] = c4.AI
     assert c4.check_horizontal(test_board) == False
+    for i in range(4):
+        test_board[5][i+3] = c4.AI
+    assert c4.check_horizontal(test_board) == True
 
 
 def test_check_vertical():
