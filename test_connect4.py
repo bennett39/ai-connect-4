@@ -105,4 +105,9 @@ def test_make_selection(monkeypatch):
     assert c4.make_selection(c4.HUMAN) is None
 
 
+def test_is_winning_move():
+    board = c4.create_board()
+    board[0][4] = board[1][5] = board[2][6] = c4.AI
+    assert c4.is_winning_move(board) == False
+
 pytest.main()

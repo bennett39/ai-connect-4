@@ -40,13 +40,13 @@ def check_diagonals(board):
     all_vals = build_all_vals(board)
     # Upward >> /
     for i in range(COLS * 3, ROWS * COLS - 3):
-        if all_vals[i] > 0:
+        if all_vals[i] > 0 and i >= 0:
             if all_vals[i] == all_vals[i-COLS+1] == all_vals[i-COLS*2+2] \
                 == all_vals[i-COLS*3+3]:
                 return True
     # Downward >> \
     for i in range(COLS * 3 + 3, ROWS * COLS):
-        if all_vals[i] > 0:
+        if all_vals[i-COLS*3-3] > 0 and i-COLS*3-3 >= 0:
             if all_vals[i] == all_vals[i-COLS-1] == all_vals[i-COLS*2-2] \
                 == all_vals[i-COLS*3-3]:
                 return True
