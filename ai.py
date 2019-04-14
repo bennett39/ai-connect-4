@@ -66,7 +66,7 @@ def score_diagonals(board, row, col):
 def score_horizontals(board, row, col):
     score = 0
     for i in range(c4.COLS - 3):
-        if col - 3 <= i:
+        if i <= col and col - 3 <= i:
             score += score_window(board[row][i:i+4])
     return score
 
@@ -74,7 +74,7 @@ def score_horizontals(board, row, col):
 def score_verticals(board, row, col):
     score = 0
     for i in range(c4.ROWS - 3):
-        if row - 3 <= i:
+        if i <= row and row - 3 <= i:
             window = np.array(
                 [board[i][col], board[i+1][col],
                 board[i+2][col], board[i+3][col]]
