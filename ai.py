@@ -64,14 +64,24 @@ def score_diagonals(board, row, col):
 
 
 def score_horizontals(board, row, col):
-    lo, hi, score = set_lo(col), set_hi(col), 0
-    for i in range(lo, hi):
-        score += score_window(board[row][i:i+4])
+    score = 0
+    for i in range(c4.COLS - 3):
+        if col - 3 <= i:
+            score += score_window(board[row][i:i+4])
     return score
 
 
 def score_verticals(board, row, col):
-    return 0
+    score = 0
+    for i in range(c4.ROWS - 3):
+        if row - 3 <= i:
+            window = np.array(
+                [board[i][col], board[i+1][col],
+                board[i+2][col], board[i+3][col]]
+            )
+            score += score_window(window)
+            print(window)
+    return score
 
 
 def score_window(window):
@@ -90,14 +100,6 @@ def select_column(board):
     return weights.index(max(weights))
 
 
-def set_hi(col):
-    return c4.COLS - 3 if col > 3 else col + 1
-
-
-def set_lo(col):
-    return 0 if col < 3 else col - 3
-
-
 def weigh_pieces(num_pieces):
     if num_pieces == 0:
         return 0
@@ -112,18 +114,21 @@ def weigh_pieces(num_pieces):
 def weigh_columns(board):
     weights = []
     for col in range(c4.COLS):
-        row = c4.ROWS - 1
-        while row >= 0 and board[row][col] != 0:
-            row -= 1
-        weights.append(weigh_position(board, row, col))
+        if board[0][col] == 0: # Col is not full
+            row = c4.ROWS - 1
+            while row >= 0 and board[row][col] != 0:
+                row -= 1
+            weights.append(weigh_position(board, row, col))
     return weights
 
 
 def weigh_position(board, row, col):
+    if row < 0 or row >= c4.ROWS or col < 0 or col >= c4.COLS:
+        return 0
     return score_horizontals(board, row, col) \
             + score_verticals(board, row, col) \
             + score_diagonals(board, row, col) \
-            + CENTER_WEIGHT if col == 3 else 0
+            + (CENTER_WEIGHT if col == 3 else 0)
 
 
 if __name__ == "__main__":
