@@ -22,8 +22,8 @@ def main():
             print_board(board)
             print(f"-----------\nPLAYER {player} IS THE WINNER!")
             game_over = True
-        if is_full_board():
-            print("No more moves. Draw.")
+        if is_full_board(board):
+            print("------------\nNo more moves. Draw.")
             game_over = True
         is_player_one = not is_player_one
 
@@ -116,8 +116,6 @@ def make_selection(player):
 def print_board(board):
     print("-|0||1||2||3||4||5||6|-")
     print(board)
-
-
 
 
 if __name__ == "__main__":
